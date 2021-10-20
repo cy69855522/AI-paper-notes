@@ -20,6 +20,7 @@ R = A @ V  # [S, C]
 O = fc4(R)  # [S, C]
 ```
 </details>
+
 ## An Attention Free Transformer
 AFT-simple 时间复杂度 S · C
 -	给出输入X [S, C]
