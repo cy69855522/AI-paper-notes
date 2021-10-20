@@ -6,7 +6,14 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 <details>
   <summary>Point Transformer Layer</summary>
   
-  
+  ```python
+  # Given X [N, C], P(position) [N, C], L(local neighbor) [N, k, C]
+  Q, K, V = fc1(X), fc2(L), fc3(L)
+  P = mlp1(X[:, None] - L)  # [N, k, C]
+  A = softmax(mlp2(Q[:, None] - K + P))  # [N, k, C]
+  R = A ⊙ (V + P)  # [N, k, C]
+  X = R.sum(dim=1)  # [N, C]
+  ```
   
 </details>
 
@@ -26,7 +33,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
   A = Q @ K.T  # [S, S]
   A = (A / √C).softmax(dim=-1)  # [S, S]
   R = A @ V  # [S, C]
-  O = fc4(R)  # [S, C]
+  X = fc4(R)  # [S, C]
   ```
 
 </details>
@@ -44,7 +51,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
   A_global = K.softmax(dim=0)  # [S, C]
   R_global = (A_global * V).sum(dim=0)  # [C]
   R = Q.sigmoid() * R_global  # [S, C]
-  O = fc4(R)  # [S, C]
+  X = fc4(R)  # [S, C]
   ```
 
 </details>
@@ -60,7 +67,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
   Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
   R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
   R = Q.sigmoid() * R  # [S, C]
-  O = fc4(R)  # [S, C]
+  X = fc4(R)  # [S, C]
   ```
 
 </details>
@@ -77,7 +84,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
   Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
   R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
   R = Q.sigmoid() * R  # [S, C]
-  O = fc4(R)  # [S, C]
+  X = fc4(R)  # [S, C]
   ```
 
 </details>
