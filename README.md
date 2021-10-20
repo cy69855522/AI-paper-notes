@@ -3,8 +3,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 
 ## Attention Is All You Need
 <details>
-  
-  Self-Attention 时间复杂度S^2 · C
+  <summary>Self-Attention 时间复杂度S^2 · C</summary>
   -	给出输入X [S, C]
   -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
   -	对于S中的每个元素s，用对应的Ks与所有序列元素的V求点积，然后通过SoftMax得到s对S中每个元素的注意力。
