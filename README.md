@@ -3,7 +3,7 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 
 ## Attention Is All You Need
 <details>
-  <summary>Self-Attention 时间复杂度S^2 · C</summary>
+  <summary>Self-Attention (时间复杂度S^2 · C)</summary>
   
   -	给出输入X [S, C]
   -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
@@ -23,43 +23,54 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 </details>
 
 ## An Attention Free Transformer
-AFT-simple 时间复杂度 S · C
--	给出输入X [S, C]
--	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
--	直接对K做SoftMax得到全局注意力图，并加权求和V得到全局响应。对于每个s，利用对应的Qs对全局响应做通道维度的缩放得到独特的注意力图。
-```python
-# Given X [S, C]
-Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
-A_global = K.softmax(dim=0)  # [S, C]
-R_global = (A_global * V).sum(dim=0)  # [C]
-R = Q.sigmoid() * R_global  # [S, C]
-O = fc4(R)  # [S, C]
-```
+<details>
+  <summary>AFT-simple (时间复杂度 S · C)</summary>
+    
+  -	给出输入X [S, C]
+  -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
+  -	直接对K做SoftMax得到全局注意力图，并加权求和V得到全局响应。对于每个s，利用对应的Qs对全局响应做通道维度的缩放得到独特的注意力图。
+  ```python
+  # Given X [S, C]
+  Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
+  A_global = K.softmax(dim=0)  # [S, C]
+  R_global = (A_global * V).sum(dim=0)  # [C]
+  R = Q.sigmoid() * R_global  # [S, C]
+  O = fc4(R)  # [S, C]
+  ```
 
-AFT-full 时间复杂度 S^2 · C
--	增加了可学习的参数W [S, S]作为位置偏差
--	对K做SoftMax前先加了W，其余部分同AFT-simple
-  - W使用了重参技巧：`W = u[S, 128] @ v[128, S]`
-```python
-# Given X [S, C], W [S, S]
-Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
-R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
-R = Q.sigmoid() * R  # [S, C]
-O = fc4(R)  # [S, C]
-```
+</details>
 
-AFT-local 时间复杂度 S^2 · C
-- 只训练W中的一部分，其余权重固定为0
-```python
-# Given X [S, C], W [S, S]
-for i in range(S):
-  for j in range(S):
-    if abs(i-j) >= K
-Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
-R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
-R = Q.sigmoid() * R  # [S, C]
-O = fc4(R)  # [S, C]
-```
+<details>
+  <summary>AFT-full (时间复杂度 S^2 · C)</summary>
+  
+  -	增加了可学习的参数W [S, S]作为位置偏差
+  -	对K做SoftMax前先加了W，其余部分同AFT-simple
+    - W使用了重参技巧：`W = u[S, 128] @ v[128, S]`
+  ```python
+  # Given X [S, C], W [S, S]
+  Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
+  R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
+  R = Q.sigmoid() * R  # [S, C]
+  O = fc4(R)  # [S, C]
+  ```
 
-AFT-conv 时间复杂度 S · k · C
-- 略
+</details>
+
+<details>
+  <summary>AFT-local (时间复杂度 S^2 · C)</summary>
+  
+  - 只训练W中的一部分，其余权重固定为0
+  ```python
+  # Given X [S, C], W [S, S]
+  for i in range(S):
+    for j in range(S):
+      if abs(i-j) >= K
+  Q, K, V = fc1(X), fc2(X), fc3(X)  # [S, C]
+  R = W.exp() @ (K.exp() * V) / W.exp() @ K.exp()  # [S, C]
+  R = Q.sigmoid() * R  # [S, C]
+  O = fc4(R)  # [S, C]
+  ```
+
+</details>
+
+AFT-conv (时间复杂度 S · k · C)
