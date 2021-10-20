@@ -1,9 +1,9 @@
 # AI-paper-notes
+S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 
-# Attention
-S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value, A: attention, R: response, O: output
-
-## 《Attention Is All You Need》
+## Attention Is All You Need
+<details>
+  <summary>Click for details</summary>
 Self-Attention 时间复杂度S^2 · C
 -	给出输入X [S, C]
 -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
@@ -19,8 +19,8 @@ A = (A / √C).softmax(dim=-1)  # [S, S]
 R = A @ V  # [S, C]
 O = fc4(R)  # [S, C]
 ```
-
-## 《An Attention Free Transformer》
+</details>
+## An Attention Free Transformer
 AFT-simple 时间复杂度 S · C
 -	给出输入X [S, C]
 -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
