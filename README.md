@@ -4,7 +4,6 @@ S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 <details>
   <summary>Attention Is All You Need</summary>
 
-  
 Self-Attention 时间复杂度S^2 · C
 -	给出输入X [S, C]
 -	通过3个FC将X线性变换为Q [S, C], K [S, C], V [S, C]
@@ -20,6 +19,7 @@ A = (A / √C).softmax(dim=-1)  # [S, S]
 R = A @ V  # [S, C]
 O = fc4(R)  # [S, C]
 ```
+
 </details>
 
 ## An Attention Free Transformer
