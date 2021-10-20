@@ -1,9 +1,8 @@
 # AI-paper-notes
 S: sequence, C: channel, FC: fully connected layer, Q: query, K: key, V: value
 
-## Attention Is All You Need
 <details>
-  <summary>Click for details</summary>
+  <summary>Attention Is All You Need</summary>
 
 Self-Attention 时间复杂度S^2 · C
 -	给出输入X [S, C]
